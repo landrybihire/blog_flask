@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row"> {# Use Bootstrap row for grid #}
+    <div class="col-lg-8"> {# Main content column #}
+        <h1 class="mb-4">Blog Posts</h1> {# Keep h1 and margin class #}
+
+        {% if posts %}
+            <div class="row"> {# Inner row for post summaries #}
+                {% for post in posts %}
+                    <div class="col-md-6 mb-4"> {# Adjust column size as needed #}
+                        {% include 'blog/_post_summary.html' %} {# _post_summary.html will use Bootstrap card classes #}
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p>No posts found.</p>
+        {% endif %}
+
+        <!-- Pagination Links -->
+        <nav aria-label="Page navigation">
+            <ul class="pagination justify-content-center"> {# Use Bootstrap pagination classes #}
+                <li class="page-item {% if not prev_url %}disabled{% endif %}">
+                    <a class="page-link" href="{{ prev_url or '#' }}" tabindex="-1" aria-disabled="true">Previous</a>
+                </li>
+                <li class="page-item {% if not next_url %}disabled{% endif %}">
+                    <a class="page-link" href="{{ next_url or '#' }}">Next</a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+    <div class="col-lg-4"> {# Sidebar column #}
+        {% block sidebar_content %} {# Include sidebar content block from base.html #}
+            {# Default sidebar content for index page #}
+            <div class="card mb-4"> {# Use Bootstrap card for widget container #}
+                <div class="card-header">About This Blog</div> {# Use Bootstrap card-header #}
+                <div class="card-body"> {# Use Bootstrap card-body #}
+                    <p class="card-text">Welcome to my personal blog, where I share my thoughts on technology, science, and the future.</p> {# Use Bootstrap card-text #}
+                </div>
+            </div>
+            {# Add more widgets here using Bootstrap card structure #}
+        {% endblock %}
+    </div>
+</div>
+{% endblock %}

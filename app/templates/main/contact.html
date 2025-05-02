@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-lg-8 offset-lg-2">
+            <h1 class="mb-4">{{ title }}</h1>
+            <p>If you have any questions, suggestions, or just want to say hello, feel free to reach out!</p>
+            
+            <!-- Simple contact info display -->
+            <div class="card mt-4">
+                <div class="card-body">
+                    <h5 class="card-title">Contact Information</h5>
+                    <p class="card-text">
+                        <strong>Email:</strong> <a href="mailto:contact@mymodernblog.com">contact@mymodernblog.com</a><br>
+                        <strong>GitHub:</strong> <a href="https://github.com/yourusername" target="_blank">github.com/yourusername</a><br>
+                        <!-- Add other contact methods as needed -->
+                    </p>
+                </div>
+            </div>
+
+            <!-- Optional: Add a contact form later if needed -->
+            <!-- <form class="mt-4">
+                <div class="mb-3">
+                    <label for="name" class="form-label">Name</label>
+                    <input type="text" class="form-control" id="name" required>
+                </div>
+                <div class="mb-3">
+                    <label for="email" class="form-label">Email address</label>
+                    <input type="email" class="form-control" id="email" required>
+                </div>
+                <div class="mb-3">
+                    <label for="message" class="form-label">Message</label>
+                    <textarea class="form-control" id="message" rows="5" required></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">Send Message</button>
+            </form> -->
+        </div>
+    </div>
+</div>
+{% endblock %}

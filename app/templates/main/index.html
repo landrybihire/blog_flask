@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <h1 class="text-center mb-4">Welcome to My Modern Blog</h1>
+            <p class="lead text-center mb-5">Discover the latest articles and insights.</p>
+
+            <h2 class="mb-4">Latest Posts</h2>
+            {% if posts %}
+                {% for post in posts %}
+                    {% include 'blog/_post_summary.html' %}
+                {% endfor %}
+                 <div class="text-center mt-4">
+                    <a href="{{ url_for('blog.index') }}" class="btn btn-outline-primary">View All Posts</a>
+                </div>
+            {% else %}
+                <p class="text-center">No posts published yet. Check back soon!</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

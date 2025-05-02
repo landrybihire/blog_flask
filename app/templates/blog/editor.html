@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <h1 class="mb-4">{{ title }}</h1>
+            <form method="POST" enctype="multipart/form-data" novalidate>
+                {{ form.hidden_tag() }}
+
+                <div class="mb-3">
+                    {{ form.title.label(class="form-label") }}
+                    {{ form.title(class="form-control form-control-lg" + (" is-invalid" if form.title.errors else "")) }}
+                    {% for error in form.title.errors %}
+                        <div class="invalid-feedback">{{ error }}</div>
+                    {% endfor %}
+                </div>
+
+                <div class="mb-3">
+                    {{ form.summary.label(class="form-label") }}
+                    {{ form.summary(class="form-control" + (" is-invalid" if form.summary.errors else ""), rows=3) }}
+                     {% for error in form.summary.errors %}
+                        <div class="invalid-feedback">{{ error }}</div>
+                    {% endfor %}
+                </div>
+
+                <div class="mb-3">
+                    {{ form.content.label(class="form-label") }}
+                    {{ form.content(class="form-control" + (" is-invalid" if form.content.errors else "")) }}
+                     {% for error in form.content.errors %}
+                        <div class="invalid-feedback">{{ error }}</div>
+                    {% endfor %}
+                </div>
+
+                <div class="mb-3">
+                    {{ form.featured_image.label(class="form-label") }}
+                    {{ form.featured_image(class="form-control" + (" is-invalid" if form.featured_image.errors else "")) }}
+                     {% for error in form.featured_image.errors %}
+                        <div class="invalid-feedback">{{ error }}</div>
+                    {% endfor %}
+                    {% if form.featured_image.object_data %}
+                        <small class="form-text text-muted">Current image: {{ form.featured_image.object_data }}</small>
+                    {% endif %}
+                </div>
+
+                <div class="form-check mb-3">
+                    {{ form.publish(class="form-check-input" + (" is-invalid" if form.publish.errors else "")) }}
+                    {{ form.publish.label(class="form-check-label") }}
+                     {% for error in form.publish.errors %}
+                        <div class="invalid-feedback">{{ error }}</div>
+                    {% endfor %}
+                </div>
+
+                {{ form.submit(class="btn btn-primary") }}
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

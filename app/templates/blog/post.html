@@ -1,0 +1,163 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row"> {# Use Bootstrap row for grid #}
+    <div class="col-lg-8"> {# Main content column #}
+        <!-- Post content-->
+        <article>
+            <!-- Post header-->
+            <header class="mb-4"> {# Use Bootstrap margin #}
+                <!-- Post title-->
+                <h1 class="fw-bolder mb-1 post-title">{{ post.title }}</h1> {# Use Bootstrap classes and post-title #}
+                <!-- Post meta content-->
+                <div class="text-muted fst-italic mb-2 post-date"> {# Use Bootstrap classes and post-date #}
+                    Posted on {{ post.created_at.strftime('%B %d, %Y') }} by {{ post.author.username }}
+                </div>
+                <!-- Post categories (optional) -->
+                <!-- <a class="badge bg-secondary text-decoration-none link-light" href="#!">Web Design</a> -->
+            </header>
+            <!-- Preview image figure-->
+            {% if post.featured_image %}
+            <figure class="mb-4"> {# Use Bootstrap margin #}
+                <img class="img-fluid rounded" src="{{ url_for('static', filename='images/uploads/' + post.featured_image) }}" alt="{{ post.title }}" loading="lazy" /> {# Use Bootstrap image classes and lazy loading #}
+            </figure>
+            {% endif %}
+            <!-- Post content-->
+            <section class="mb-5 post-content"> {# Use Bootstrap margin and post-content #}
+                {{ post.content|safe }}
+            </section>
+        </article>
+
+        {% if current_user == post.author %}
+        <div class="mt-4 mb-4"> {# Keep margin classes #}
+             <a href="{{ url_for('blog.edit', slug=post.slug) }}" class="btn btn-secondary">Edit Post</a> {# Keep original buttons #}
+             <form action="{{ url_for('blog.delete', slug=post.slug) }}" method="POST" style="display:inline;">
+                <input type="submit" value="Delete Post" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this post?');"> {# Keep original buttons #}
+            </form>
+        </div>
+        {% endif %}
+
+        <!-- Interaction section -->
+        <section class="interaction-section mt-4 mb-4 post-actions"> {# Use Bootstrap margins and post-actions #}
+            {% if current_user.is_authenticated %}
+                <span class="like-button" data-post-id="{{ post.id }}" style="cursor: pointer;">
+                    {% if user_liked %}
+                        <i class="fas fa-heart" style="color: var(--accent-color-1);"></i> {# Filled heart with accent color #}
+                    {% else %}
+                        <i class="far fa-heart"></i> {# Empty heart #}
+                    {% endif %}
+                    <span class="like-count">{{ like_count }}</span>
+                </span>
+                {# Share icon (basic example, can be expanded) #}
+                <span class="share-icon ms-3" style="cursor: pointer;"> {# Use Bootstrap margin #}
+                    <i class="fas fa-share-alt"></i> Share
+                </span>
+            {% else %}
+                <span class="like-count">{{ like_count }} likes</span>
+            {% endif %}
+        </section>
+
+        <!-- Comments section -->
+        <section class="comments-section mt-4"> {# Use Bootstrap margin #}
+            <h3>Comments ({{ comments|length }})</h3>
+            {% if current_user.is_authenticated %}
+                <div class="card my-4"> {# Use Bootstrap card and margin #}
+                    <h5 class="card-header">Leave a Comment:</h5> {# Use Bootstrap card-header #}
+                    <div class="card-body"> {# Use Bootstrap card-body #}
+                        <form action="{{ url_for('blog.post', slug=post.slug) }}" method="POST">
+                            {{ comment_form.hidden_tag() }}
+                            <div class="form-group"> {# Keep form-group #}
+                                {{ comment_form.content(class="form-control", rows="3", placeholder="Join the discussion and leave a comment!") }} {# Use Bootstrap form-control #}
+                                {% for error in comment_form.content.errors %}
+                                    <span style="color: red;">[{{ error }}]</span>
+                                {% endfor %}
+                            </div>
+                            {{ comment_form.submit(class="btn btn-primary mt-2") }} {# Use Bootstrap button classes #}
+                        </form>
+                    </div>
+                </div>
+            {% else %}
+                <p>You must be logged in to leave a comment. <a href="{{ url_for('auth.login') }}">Login here</a>.</p>
+            {% endif %}
+
+            <!-- Single comment -->
+            {% for comment in comments %}
+            <div class="d-flex mb-4"> {# Use Bootstrap flex and margin #}
+                <div class="flex-shrink-0"><img class="rounded-circle" src="https://dummyimage.com/50x50/ced4da/6c757d.jpg" alt="..." /></div> {# Use Bootstrap classes #}
+                <div class="ms-3"> {# Use Bootstrap margin #}
+                    <div class="fw-bold">{{ comment.author.username }}</div> {# Use Bootstrap class #}
+                    {{ comment.content }}
+                    <div class="text-muted fst-italic" style="font-size: 0.8em;"> {# Use Bootstrap classes #}
+                        Posted on {{ comment.created_at.strftime('%B %d, %Y at %I:%M %p') }}
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </section>
+    </div>
+    <div class="col-lg-4"> {# Sidebar column #}
+        {% block sidebar_content %} {# Include sidebar content block from base.html #}
+            {# Default sidebar content for post page #}
+            <div class="card mb-4"> {# Use Bootstrap card for widget container #}
+                <div class="card-header">About The Author</div> {# Use Bootstrap card-header #}
+                <div class="card-body"> {# Use Bootstrap card-body #}
+                    <p class="card-text">Learn more about {{ post.author.username }} and their work.</p> {# Use Bootstrap card-text #}
+                    {# Add a link to author profile if available #}
+                    {% if post.author.profile_url %}
+                        <p><a href="{{ post.author.profile_url }}">View Profile</a></p>
+                    {% endif %}
+                </div>
+            </div>
+            {# Example: Recent Posts Widget #}
+            {% if recent_posts %} {# Assuming 'recent_posts' is passed to the template context #}
+            <div class="card mb-4"> {# Use Bootstrap card for widget container #}
+                <div class="card-header">Recent Posts</div> {# Use Bootstrap card-header #}
+                <div class="card-body"> {# Use Bootstrap card-body #}
+                    <ul class="list-unstyled"> {# Use Bootstrap list style #}
+                        {% for recent_post in recent_posts %}
+                            <li><a href="{{ url_for('blog.post', slug=recent_post.slug) }}">{{ recent_post.title }}</a></li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+            {% endif %}
+        {% endblock %}
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const likeButton = document.querySelector('.like-button');
+    if (likeButton) {
+        likeButton.addEventListener('click', function() {
+            const postId = this.dataset.postId;
+            fetch(`/blog/like/${postId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            })
+            .then(response => response.json())
+            .then(data => {
+                const likeIcon = this.querySelector('i');
+                const likeCountSpan = this.querySelector('.like-count');
+                likeCountSpan.textContent = data.like_count;
+                if (data.liked) {
+                    likeIcon.classList.remove('far', 'fa-heart');
+                    likeIcon.classList.add('fas', 'fa-heart');
+                    likeIcon.style.color = 'var(--accent-color-1)'; // Use CSS variable
+                } else {
+                    likeIcon.classList.remove('fas', 'fa-heart');
+                    likeIcon.classList.add('far', 'fa-heart');
+                    likeIcon.style.color = ''; // Reset color
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        });
+    }
+});
+</script>
+
+{% endblock %}
