@@ -113,8 +113,8 @@ Des options de déploiement gratuit incluent des plateformes comme Render, Pytho
 
 ## Licence
 
-[Spécifiez la licence ici, par exemple MIT]
+licence MIT
 
 ## Auteur
 
-[Votre Nom/Pseudo]
+landryb
